@@ -1,7 +1,9 @@
  # ManagerBot
 
-ManagerBot 是使用[NoneBot](https://github.com/nonebot/nonebot) 开发的群管QQ机器人
- 
+ManagerBot 是使用[NoneBot](https://github.com/nonebot/nonebot) 开发的QQ群管机器人。
+
+它用来避免交大学科群混入非交大在校生的广告机器人。用户通过指定网站申请与自己QQ绑定的验证码，该验证码将发送至用户的交大邮箱。用户加群时提交该验证码，Bot将验证用户输入的有效性，并自动决定放行与否。
+
  ## 如何使用
  
  1. 下载[酷Q](https://cqp.cc/b/news)

@@ -1,19 +1,30 @@
-from hashlib import sha256
+import os
+from datetime import timedelta, datetime
 
 from nonebot import RequestSession, on_request
 
+from plugins.group_manager.attestation.cmac_attestation import CmacAttestation
 
-def verify(comment: str, group_id: int, user_id: int) -> bool:
-    comment = comment.split('\n')[-1]
-    comment = comment.split('：')[-1]
-    ans = sha256(f'{group_id}{user_id}'.encode(encoding='utf-8')).hexdigest()[0:7]
-    return ans == comment
+secret = os.environ.get('ATTESTATION_SECRET', default=None)
+if secret is None:
+    print('未设置ATTESTATION_SECRET环境变量')
+    exit()
+attestation = CmacAttestation(secret=bytes.fromhex(secret))
+
+
+def verify(comment: str, user_id: int) -> bool:
+    code = comment.split('\n')[-1].split('：')[-1]
+    timestamp = attestation.verify(str(user_id), code)
+    if timestamp is None:
+        return False
+    now = datetime.now()
+    return timestamp < now < timestamp + timedelta(days=30)
 
 
 @on_request('group')
 async def _(session: RequestSession):
     if session.event.sub_type == 'add':
-        if verify(session.event.comment, session.event.group_id, session.event.user_id):
+        if verify(session.event.comment, session.event.user_id):
             await session.approve()
         else:
             await session.reject('验证码错误')
