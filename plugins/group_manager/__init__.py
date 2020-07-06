@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Tuple
 
 import redis
@@ -162,3 +162,22 @@ async def _(session: CommandSession):
             return
         del_email(strip)
         await session.send(f'已清除{strip}的邮箱记录')
+
+
+@on_command('apply', aliases=('申请',), only_to_me=True)
+async def _(session: CommandSession):
+    qq = session.event.user_id
+    if qq in SUPERUSERS:
+        strip = session.current_arg.strip().split(' ')
+        mail = strip[0]
+        qq = strip[1]
+        if not check_email(mail):
+            await session.send('填写错误，请输入正确的SJTU邮箱。')
+            return
+        if check_max_email(qq):
+            res, msg = await send_email(mail, qq)
+            if res:
+                incr_email(mail, qq)
+        else:
+            msg = '超过发送邮件数量限制。'
+        await session.send(msg)
