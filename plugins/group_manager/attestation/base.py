@@ -32,7 +32,10 @@ class AttestationBase(metaclass=ABCMeta):
         qq_number = self._normalize(qq_number)
 
         if not isinstance(quote, bytes):
-            quote = b58decode(quote)
+            try:
+                quote = b58decode(quote)
+            except UnicodeEncodeError:
+                return None
 
         try:
             self._verify(quote[:4] + qq_number, quote[4:])
