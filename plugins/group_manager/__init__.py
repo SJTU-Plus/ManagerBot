@@ -34,10 +34,5 @@ def check_qq(qq: str) -> bool:
 
 @on_request('group')
 async def _(session: RequestSession):
-    if session.event.sub_type == 'add':
-        if verify(session.event.comment, session.event.user_id):
-            await session.approve()
-        else:
-            await session.reject('验证码错误')
-    else:
-        await session.reject()
+    if session.event.sub_type == 'add' and verify(session.event.comment, session.event.user_id):
+        await session.approve()
