@@ -1,0 +1,3 @@
+[submodule "plugins/group_manager/attestation"]
+	path = plugins/group_manager/attestation
+	url = https://github.com/SJTU-Plus/QG-Attestation-Core.git
