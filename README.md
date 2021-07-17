@@ -18,10 +18,7 @@ ManagerBot 是使用[NoneBot](https://github.com/nonebot/nonebot) 开发的QQ群
     ```
  4. 配置环境变量
     ```shell script
-    export ATTESTATION_SECRET=secret
+    export API_KEY=api_key
     export SUPER_USER=qq
     ```
  5. 运行`go-cqhttp`，运行`bot.py`
- 
- ### 使用docker compose
- 请参考 [ManageBotDocker](https://github.com/SJTU-Plus/ManageBotDocker)
